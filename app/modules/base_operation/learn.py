@@ -37,16 +37,18 @@ class Learn:
         self._y = y
 
     # Init train data
-    def init_data(self, test_size=0.3, random_state=54):
+    def init_data(self, test_size, random_state):
 
         # Make sure x and y is set
-        assert(not self._x.empty)
-        assert(not self._y.empty)
+        if self._x is None:
+            raise ValueError('x must be set')
+        if self._y is None:
+            raise ValueError('y must be set')
 
         self._x_train, self._x_test, self._y_train, self._y_test = train_test_split(self._x,self._y,test_size=test_size,random_state=random_state)
 
     # Train with linaer regression
-    def linear_regression_train(self, plot=False):
+    def linear_regression(self, plot=False):
 
         # Train and get predictions
         reg = LinearRegression()
@@ -56,10 +58,11 @@ class Learn:
         # Plot result graph if needed
         if plot:
             pyplot.scatter(self._y_test, predictions, color='blue')
+            pyplot.title('Scattered Graph')
             pyplot.show()
 
         # Return results
         return {
-            "predictions" : predictions,
+            "predictions" : list(predictions),
             "score": r2_score(self._y_test, predictions),
         }
