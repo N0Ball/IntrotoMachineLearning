@@ -70,7 +70,7 @@ class BaseML:
     def model(self, new_model: str) -> None:
         self._model = new_model
 
-    @model.setter
+    @plot.setter
     def plot(self, new_plot: bool) -> None:
         self._plot = new_plot
 
