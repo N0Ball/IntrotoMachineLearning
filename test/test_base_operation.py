@@ -35,4 +35,4 @@ class TestLean(unittest.TestCase):
         self.target.y = self.data['Price']
 
         self.target.init_data(0.3, 54)
-        self.assertDictEqual(self.answer, self.target.linear_regression())
+        self.assertAlmostEqual(self.answer['score'], self.target.linear_regression()['score'], 3)

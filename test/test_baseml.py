@@ -32,7 +32,7 @@ class Test_BaseML(unittest.TestCase):
 
             self.plot = False
 
-        self.assertDictEqual(train,self.answer)
+        self.assertAlmostEqual(train['score'], self.answer['score'], 3)
 
 if __name__ == '__main__':
     unittest.main()
