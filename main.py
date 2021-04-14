@@ -2,16 +2,26 @@ from app.modules.baseml import BaseML
 
 if __name__ == '__main__':
 
-    housing = BaseML('housing')
+    titanic = BaseML('titanic')
+    titanic.drop(['Name', 'Ticket'])
+    titanic.fix('Age', help='Sex')
+    titanic.auto_fix()
+    titanic.get_dummy(['Sex', 'Embarked'])
+    titanic.drop('Sex_female')
+    titanic.plot = False
+    titanic.model = 'logistic_regression'
 
-    housing.norm_plot('Price')
-    housing.join_plot('Avg. Area Income', 'Price')
-    housing.pair_plot()
-    
-    @housing.train
-    def train(self):
+    res = []
 
-        self.data_x = self.data.iloc[:, :5]
-        self.data_y = self.data['Price']
+    for i in range(1,100):
+        titanic.random_state = i
+        @titanic.train
+        def train(self):
 
-    print(f'score: {train["score"]}')
+            self.data_x = self.data.drop(['Survived', 'Pclass'],axis=1)
+            self.data_y = self.data['Survived']
+
+        res.append(train['score'])
+
+    print(res.index(max(res)))
+        
