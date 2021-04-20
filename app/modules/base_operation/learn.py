@@ -1,6 +1,8 @@
+import pandas
 from sklearn.linear_model import LinearRegression
+from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import r2_score
+from sklearn.metrics import r2_score, accuracy_score
 
 from matplotlib import pyplot
 
@@ -65,4 +67,24 @@ class Learn:
         return {
             "predictions" : list(predictions),
             "score": r2_score(self._y_test, predictions),
+        }
+
+    # Train with Logistic Regression
+    def logistic_regression(self, plot=False):
+
+        # Train and get predictions
+        lr = LogisticRegression(max_iter=1000)
+        lr.fit(self._x_train, self._y_train)
+        predictions = lr.predict(self._x_test)
+
+        # Plot result graph if needed
+        if plot:
+            pyplot.scatter(self._y_test, predictions, color='blue')
+            pyplot.title('Scattered Graph')
+            pyplot.show()
+
+        # Return results
+        return {
+            "predictions" : list(predictions),
+            "score": accuracy_score(self._y_test, predictions),
         }

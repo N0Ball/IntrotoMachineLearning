@@ -81,8 +81,48 @@ class BaseML:
     def join_plot(self, first, second):
         self._plotter.join_plot(first, second, title=f'{self.name}\'s Join {first}, {second} Graph')
 
-    def pair_plot(self):
-        self._plotter.pair_plot(title=f'{self.name}\'s Pair Graph ')
+    def pair_plot(self, data=None):
+        if data:
+            self._plotter.pair_plot(data, title=f'{self.name}\'s Pair Graph ')
+        else:
+            self._plotter.pair_plot(title=f'{self.name}\'s Pair Graph ')
+
+    # Data methods
+    def drop(self, fields):
+        self._data.drop(fields, axis=1, inplace=True)
+
+    def info(self):
+        print(self._data.info())
+
+    def get_dummy(self, columns):
+        self._data = pandas.get_dummies(data=self._data, columns=columns)
+
+    def fix(self, data, help=None):
+
+        if help is not None:
+
+            self._data[data] = self._data.groupby(help)[data].apply(lambda x: x.fillna(x.median()))
+
+        else:
+
+            if repr(self._data.dtypes[data]) == "dtype('float64')" or repr(self._data.dtypes[data]) == "dtype('int64')":
+                self._data[data].fillna(self.data[data].median(), inplace=True)
+
+            if repr(self._data.dtypes[data]) == "dtype('O')":
+                self._data[data].fillna(self._data[data].value_counts().idxmax(), inplace=True)
+
+    def auto_fix(self):
+        
+        for data in self._data:
+            
+            if self._data[data].isnull().sum() > ( len(self._data[data])/2 ):
+                print(f'Dropped {data}!')
+                self.drop(data)
+                continue
+
+            if self._data[data].isnull().sum() > 0:
+
+                self.fix(data)
 
     # Learning methods
     def train(self, func):
@@ -96,3 +136,4 @@ class BaseML:
         except Exception as e:
             print(f'Wrong model name')
             print(e)
+            exit()

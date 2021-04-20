@@ -31,6 +31,9 @@ class Plotter:
         seaborn.jointplot(x=self.data[first], y=self.data[second])
 
     @draw
-    def pair_plot(self, title='Default'):
-        seaborn.pairplot(self.data)
+    def pair_plot(self,data=None, title='Default'):
+        if not data is None:
+            seaborn.pairplot(self.data[data], dropna=True)
+        else:
+            seaborn.pairplot(self.data, dropna=True)
 
