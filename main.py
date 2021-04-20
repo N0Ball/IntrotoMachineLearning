@@ -1,3 +1,4 @@
+from progress.bar import Bar
 from app.modules.baseml import BaseML
 
 if __name__ == '__main__':
@@ -13,15 +14,28 @@ if __name__ == '__main__':
 
     res = []
 
-    for i in range(1,100):
-        titanic.random_state = i
-        @titanic.train
-        def train(self):
+    with Bar('Processing', max=20) as bar:
+        for i in range(1,1000):
+            titanic.random_state = i
+            @titanic.train
+            def train(self):
 
-            self.data_x = self.data.drop(['Survived', 'Pclass'],axis=1)
-            self.data_y = self.data['Survived']
+                self.data_x = self.data.drop(['Survived', 'Pclass'],axis=1)
+                self.data_y = self.data['Survived']
 
-        res.append(train['score'])
+            res.append(train['score'])
 
-    print(res.index(max(res)))
+            if i%49 == 0:
+                bar.next()
+
+    best = res.index(max(res))
+    print('Best random state: {best}')
+    
+    @titanic.train
+    def train(self):
+
+        self.data_x = self.data.drop(['Survived', 'Pclass'],axis=1)
+        self.data_y = self.data['Survived']
+
+    print(train)
         
